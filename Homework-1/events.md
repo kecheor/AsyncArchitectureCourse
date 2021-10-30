@@ -1,1 +1,1 @@
-![Events](./images/es.png)
+![Events](./image/es.png)
