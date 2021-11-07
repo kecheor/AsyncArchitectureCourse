@@ -1,8 +1,5 @@
 using Popug.Accounts;
-using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication.OAuth.Claims;
-using Microsoft.AspNetCore.Authentication;
 using Popug.Accounts.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -67,15 +64,3 @@ app.MapPost("/api/add", async (Account account, IAccountRepository repository) =
 app.MapPost("/api/update", async (Account account, IAccountRepository repository) => await repository.Update(account));
 
 app.Run();
-
-
-
-
-
-
-
-
-
-
-
-
