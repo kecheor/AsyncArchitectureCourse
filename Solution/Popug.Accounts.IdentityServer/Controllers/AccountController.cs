@@ -1,20 +1,13 @@
-﻿using Duende.IdentityServer;
-using IdentityModel;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Popug.Accounts;
 
 namespace Popug.Accounts.IdentityServer.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IAccountService _accountService;
+        private readonly IAccountIdentityService _accountService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountIdentityService accountService)
         {
             _accountService = accountService;
         }
@@ -49,12 +42,17 @@ namespace Popug.Accounts.IdentityServer.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            if (User?.Identity.IsAuthenticated == true)
+            if (User?.Identity?.IsAuthenticated == true)
             {
                 await HttpContext.SignOutAsync();
                 return Ok();
             }
             return StatusCode(StatusCodes.Status401Unauthorized);
+        }
+
+        public IActionResult Error(int? code)
+        {
+            return View();
         }
     }
 }

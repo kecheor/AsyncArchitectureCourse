@@ -1,18 +1,14 @@
-﻿using Duende.IdentityServer;
-using IdentityModel;
+﻿using IdentityServer4;
 using Microsoft.AspNetCore.Authentication;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Popug.Accounts.IdentityServer
 {
-    public class AccountService : IAccountService
+    public class AccountIdentityService : IAccountIdentityService
     {
         private readonly IAccountRepository _accountRepository;
         private static AuthenticationProperties _authenticationProperties;
 
-        public AccountService(IAccountRepository accountRepository)
+        public AccountIdentityService(IAccountRepository accountRepository)
         {
             _accountRepository = accountRepository;
             _authenticationProperties = new AuthenticationProperties
@@ -22,8 +18,6 @@ namespace Popug.Accounts.IdentityServer
                 AllowRefresh = true,
             };
         }
-
-
 
         public async Task<IdentityServerUser?> FindAccount(int curvature)
         {

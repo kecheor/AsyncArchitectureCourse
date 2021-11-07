@@ -1,53 +1,29 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
-// See LICENSE in the project root for license information.
+using Microsoft.EntityFrameworkCore;
+using Popug.Accounts;
+using Popug.Accounts.IdentityServer.Configuration;
+using Popug.Accounts.Repository;
+using Popug.Accounts.IdentityServer;
 
+var builder = WebApplication.CreateBuilder(args);
 
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Serilog;
-using Serilog.Events;
-using Serilog.Sinks.SystemConsole.Themes;
-using System;
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<AccountsDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("Accounts")));
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IAccountIdentityService, AccountIdentityService>();
+builder.Services.AddIdentityServer()
+    .AddInMemoryClients(IdentityServerConfiguration.MapClients(builder.Configuration.GetSection("Clients")))
+    .AddInMemoryApiScopes(IdentityServerConfiguration.MapScopes(builder.Configuration.GetSection("ApiScopes")))
+    .AddInMemoryIdentityResources(IdentityServerConfiguration.MapResources(builder.Configuration.GetSection("Resources")));
 
-namespace Popug.Accounts.IdentityServer
-{
-    public class Program
-    {
-        public static int Main(string[] args)
-        {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-                .MinimumLevel.Override("System", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Code)
-                .CreateLogger();
+var app = builder.Build();
 
-            try
-            {
-                Log.Information("Starting host...");
-                CreateHostBuilder(args).Build().Run();
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal(ex, "Host terminated unexpectedly.");
-                return 1;
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
-        }
+app.UseStatusCodePagesWithReExecute("/Account/Error/{0}");
+app.UseExceptionHandler("/Account/Error");
+app.UseHsts();
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
+app.MapDefaultControllerRoute();
+app.UseIdentityServer();
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog()
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
-}
+app.Run();

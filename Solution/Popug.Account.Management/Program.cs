@@ -1,14 +1,16 @@
 using Popug.Accounts;
 using System.IdentityModel.Tokens.Jwt;
 using Popug.Accounts.Repository;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddDbContext<AccountsDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("Accounts")));
+builder.Services.AddScoped<AccountRepository>();
 builder.Services.AddScoped(serviceProvider =>
 {
-    IAccountRepository concreteService = new AccountRepository();
+    IAccountRepository concreteService = serviceProvider.GetService<AccountRepository>();
     IAccountRepository cudDecorator = new AccountsCudDecorator(concreteService);
     return cudDecorator;
 });
@@ -28,7 +30,7 @@ builder.Services
     .AddCookie("Cookies")
     .AddOpenIdConnect("oidc", options =>
         {
-            options.Authority = "https://localhost:5001";
+            options.Authority = "https://localhost:32776/";
             options.ClientId = "accounts";
             options.ClientSecret = "secret";
             options.ResponseType = "code";
