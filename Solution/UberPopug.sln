@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31825.309
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A61AE05F-634C-46DE-9565-3D4C16514115}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popug.Accounts.Management", "Popug.Account.Management\Popug.Accounts.Management.csproj", "{54642C23-BD35-4CF9-9B32-D67F661E885E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popug.Common", "Popug.Common\Popug.Common.csproj", "{6398CDF4-82D0-472B-8C87-009B26B20DCF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accounts", "Accounts", "{4B665FA4-2A32-471F-A800-39DC48155F98}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popug.Accounts.Repository", "Popug.Accounts.Repository\Popug.Accounts.Repository.csproj", "{6CC1B3DC-2FD7-40A1-A9C0-9109110A6956}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popug.Accounts.IdentityServer", "Popug.Accounts.IdentityServer\Popug.Accounts.IdentityServer.csproj", "{B8C3D815-D196-4524-9A92-E150D434C526}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{2218F68D-241A-4DE0-AA89-0EA534E030B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.Tasks.Repository", "Popug.Tasks.Repository\Popug.Tasks.Repository.csproj", "{E6A5CF7E-A79F-4650-A176-BF9EAB3A26CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.Tasks.Consumer", "Popug.Tasks.Consumer\Popug.Tasks.Consumer.csproj", "{A98F9BBC-9F16-43D0-869E-3FC3DE7709E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54642C23-BD35-4CF9-9B32-D67F661E885E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54642C23-BD35-4CF9-9B32-D67F661E885E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54642C23-BD35-4CF9-9B32-D67F661E885E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54642C23-BD35-4CF9-9B32-D67F661E885E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6398CDF4-82D0-472B-8C87-009B26B20DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6398CDF4-82D0-472B-8C87-009B26B20DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6398CDF4-82D0-472B-8C87-009B26B20DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6398CDF4-82D0-472B-8C87-009B26B20DCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CC1B3DC-2FD7-40A1-A9C0-9109110A6956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CC1B3DC-2FD7-40A1-A9C0-9109110A6956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CC1B3DC-2FD7-40A1-A9C0-9109110A6956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CC1B3DC-2FD7-40A1-A9C0-9109110A6956}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8C3D815-D196-4524-9A92-E150D434C526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8C3D815-D196-4524-9A92-E150D434C526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8C3D815-D196-4524-9A92-E150D434C526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8C3D815-D196-4524-9A92-E150D434C526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6A5CF7E-A79F-4650-A176-BF9EAB3A26CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6A5CF7E-A79F-4650-A176-BF9EAB3A26CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6A5CF7E-A79F-4650-A176-BF9EAB3A26CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6A5CF7E-A79F-4650-A176-BF9EAB3A26CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A98F9BBC-9F16-43D0-869E-3FC3DE7709E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A98F9BBC-9F16-43D0-869E-3FC3DE7709E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A98F9BBC-9F16-43D0-869E-3FC3DE7709E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A98F9BBC-9F16-43D0-869E-3FC3DE7709E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{54642C23-BD35-4CF9-9B32-D67F661E885E} = {4B665FA4-2A32-471F-A800-39DC48155F98}
+		{6CC1B3DC-2FD7-40A1-A9C0-9109110A6956} = {4B665FA4-2A32-471F-A800-39DC48155F98}
+		{B8C3D815-D196-4524-9A92-E150D434C526} = {4B665FA4-2A32-471F-A800-39DC48155F98}
+		{E6A5CF7E-A79F-4650-A176-BF9EAB3A26CE} = {2218F68D-241A-4DE0-AA89-0EA534E030B9}
+		{A98F9BBC-9F16-43D0-869E-3FC3DE7709E8} = {2218F68D-241A-4DE0-AA89-0EA534E030B9}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {547477A0-3920-4655-BF7C-610C9E182570}
+	EndGlobalSection
+EndGlobal
