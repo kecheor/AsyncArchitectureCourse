@@ -15,20 +15,4 @@ app.UseHttpsRedirection();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.MapGet("/api/all", () => { });
-app.MapPost("/api/add", () => { });
-app.MapPost("/api/update", () => { });
-
 app.Run();
-
-
-
-
-
-
-
-
-
-
-
-
