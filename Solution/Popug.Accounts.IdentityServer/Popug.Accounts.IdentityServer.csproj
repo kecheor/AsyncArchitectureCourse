@@ -14,4 +14,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Popug.Accounts.Repository\Popug.Accounts.Repository.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="keys\" />
+  </ItemGroup>
 </Project>
