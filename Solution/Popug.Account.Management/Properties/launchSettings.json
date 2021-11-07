@@ -1,13 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:32153",
-      "sslPort": 44347
-    }
-  },
   "profiles": {
     "Popug.Account.Management": {
       "commandName": "Project",
@@ -18,14 +10,6 @@
       },
       "applicationUrl": "https://localhost:7144;http://localhost:5144",
       "dotnetRunMessages": true
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
     },
     "Docker": {
       "commandName": "Docker",
