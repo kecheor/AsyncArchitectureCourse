@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popug.Accounts.Management", "Popug.Account.Management\Popug.Accounts.Management.csproj", "{54642C23-BD35-4CF9-9B32-D67F661E885E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popug.Common", "Popug.Common\Popug.Common.csproj", "{6398CDF4-82D0-472B-8C87-009B26B20DCF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accounts", "Accounts", "{4B665FA4-2A32-471F-A800-39DC48155F98}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popug.Accounts.Repository", "Popug.Accounts.Repository\Popug.Accounts.Repository.csproj", "{6CC1B3DC-2FD7-40A1-A9C0-9109110A6956}"
@@ -34,10 +32,6 @@ Global
 		{54642C23-BD35-4CF9-9B32-D67F661E885E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54642C23-BD35-4CF9-9B32-D67F661E885E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54642C23-BD35-4CF9-9B32-D67F661E885E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6398CDF4-82D0-472B-8C87-009B26B20DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6398CDF4-82D0-472B-8C87-009B26B20DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6398CDF4-82D0-472B-8C87-009B26B20DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6398CDF4-82D0-472B-8C87-009B26B20DCF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6CC1B3DC-2FD7-40A1-A9C0-9109110A6956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6CC1B3DC-2FD7-40A1-A9C0-9109110A6956}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CC1B3DC-2FD7-40A1-A9C0-9109110A6956}.Release|Any CPU.ActiveCfg = Release|Any CPU

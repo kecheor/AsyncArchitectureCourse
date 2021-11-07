@@ -12,10 +12,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="src\" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <ProjectReference Include="..\Popug.Accounts.Repository\Popug.Accounts.Repository.csproj" />
   </ItemGroup>
 </Project>

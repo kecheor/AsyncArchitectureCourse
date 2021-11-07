@@ -21,7 +21,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Popug.Accounts.Repository\Popug.Accounts.Repository.csproj" />
-    <ProjectReference Include="..\Popug.Common\Popug.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ui\src\" />
   </ItemGroup>
 
 </Project>
