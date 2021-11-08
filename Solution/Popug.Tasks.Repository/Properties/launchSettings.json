@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Popug.Tasks.Repository": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
