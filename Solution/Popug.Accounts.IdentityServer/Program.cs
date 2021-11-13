@@ -10,7 +10,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AccountsDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("Accounts")));
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountIdentityService, AccountIdentityService>();
-builder.Services.AddIdentityServer()
+
+builder.Services
+    .AddIdentityServer()
+    .AddAppAuthRedirectUriValidator()
+    .AddDeveloperSigningCredential()
     .AddInMemoryClients(IdentityServerConfiguration.MapClients(builder.Configuration.GetSection("Clients")))
     .AddInMemoryApiScopes(IdentityServerConfiguration.MapScopes(builder.Configuration.GetSection("ApiScopes")))
     .AddInMemoryIdentityResources(IdentityServerConfiguration.MapResources(builder.Configuration.GetSection("Resources")));
@@ -25,5 +29,10 @@ app.UseRouting();
 app.UseAuthorization();
 app.MapDefaultControllerRoute();
 app.UseIdentityServer();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 app.Run();

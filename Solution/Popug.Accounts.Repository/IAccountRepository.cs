@@ -1,11 +1,9 @@
-﻿
-namespace Popug.Accounts
+﻿namespace Popug.Accounts.Repository;
+
+public interface IAccountRepository
 {
-    public interface IAccountRepository
-    {
-        Task<Account?> Add(Account account);
-        Task<Account?> Find(int curvature);
-        Task<IReadOnlyList<Account>> GetAll();
-        Task<Account?> Update(Account account);
-    }
+    Task<Account?> Add(Account account, CancellationToken cancellationToken);
+    Task<Account?> Find(int curvature, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Account>> GetAll(CancellationToken cancellationToken);
+    Task<Account?> Update(Account account, CancellationToken cancellationToken);
 }

@@ -30,11 +30,7 @@ export default class App extends Vue {
 
   async created() {
     try {
-      var account = await axios.get("/bff/user", {
-        headers: {
-          "X-CSRF": "1",
-        },
-      });
+      var account = await axios.get("/bff/user", { headers: {"X-CSRF": "1" } });
     } catch (e) {
       switch(e.response.status) {
         case 401:

@@ -1,80 +1,77 @@
 <template>
   <CContainer>
-    <div>
-      <CCallout v-if="newPopug" color="primary">
+    <div v-if="popug">
+      <CCallout color="primary">
         <h2>Create new popug</h2>
-        <CForm>
-          <div class="mb-3">
-            <CFormLabel for="exampleInputEmail1">Chip Id</CFormLabel>
-            <CFormInput
-              id="chipId"
-              aria-describedby="chipHelp"
-              v-model="newPopug.chipId"
-            />
-            <CFormText id="chipHelp"
-              >Chip Id should be unique for each popug.</CFormText
-            >
-          </div>
-          <div class="mb-3">
-            <CFormLabel for="name">Name</CFormLabel>
-            <CFormInput id="name" v-model="newPopug.name" />
-          </div>
-          <div class="mb-3">
-            <CFormLabel for="name">Role</CFormLabel>
-            <CFormCheck
-              type="radio"
-              name="role"
-              id="role_user"
-              autoComplete="off"
-              label="User"
-              :checked="newPopug.role == 1"
-              @update-model-value="(value) => (newPopug.role = 1)"
-            />
-            <CFormCheck
-              type="radio"
-              name="role"
-              id="role_manager"
-              autoComplete="off"
-              label="Manager"
-              :checked="newPopug.role == 10"
-              @update-model-value="(value) => (newPopug.role = 10)"
-            />
-            <CFormCheck
-              type="radio"
-              name="role"
-              id="role_admin"
-              autoComplete="off"
-              label="Admin"
-              v-model="newPopug.role"
-              :checked="newPopug.role == 100"
-              @update-model-value="(value) => (newPopug.role = 100)"
-            />
-          </div>
-          <div class="mb-3">
-            <CFormLabel for="name"
-              >Beak Curvature: {{ newPopug.beakCurvature }}</CFormLabel
-            >
-            <CFormRange
-              :min="0"
-              :max="200"
-              value="0"
-              id="beakCurvature"
-              v-model="newPopug.beakCurvature"
-            />
-          </div>
-          <CButton color="primary" @click="submit"> Create </CButton>
-          <CButton color="secondary outline " @click="reset" class="m-1">
-            Cancel
-          </CButton>
-        </CForm>
+        <div class="mb-3">
+          <CFormLabel for="exampleInputEmail1">Chip Id</CFormLabel>
+          <CFormInput
+            id="chipId"
+            aria-describedby="chipHelp"
+            v-model="popug.chipId"
+          />
+          <CFormText id="chipHelp"
+            >Chip Id should be unique for each popug.</CFormText
+          >
+        </div>
+        <div class="mb-3">
+          <CFormLabel for="name">Name</CFormLabel>
+          <CFormInput id="name" v-model="popug.name" />
+        </div>
+        <div class="mb-3">
+          <CFormLabel for="name">Role</CFormLabel>
+          <CFormCheck
+            type="radio"
+            name="role"
+            id="role_user"
+            label="User"
+            :checked="popug.role == 1"
+            @update-model-value="(value) => (popug.role = 1)"
+          />
+          <CFormCheck
+            type="radio"
+            name="role"
+            id="role_manager"
+            autoComplete="off"
+            label="Manager"
+            :checked="popug.role == 10"
+            @update-model-value="(value) => (popug.role = 10)"
+          />
+          <CFormCheck
+            type="radio"
+            name="role"
+            id="role_admin"
+            autoComplete="off"
+            label="Admin"
+            v-model="popug.role"
+            :checked="popug.role == 100"
+            @update-model-value="(value) => (popug.role = 100)"
+          />
+        </div>
+        <div class="mb-3">
+          <CFormLabel for="name"
+            >Beak Curvature: {{ popug.beakCurvature }}</CFormLabel
+          >
+          <CFormRange
+            :min="0"
+            :max="200"
+            value="0"
+            id="beakCurvature"
+            v-model="popug.beakCurvature"
+          />
+        </div>
+        <CButton color="primary" @click="post"> Create </CButton>
+        <CButton color="secondary outline " @click="reset" class="m-1">
+          Cancel
+        </CButton>
       </CCallout>
-      <CCallout v-else color="primary">
+    </div>
+    <div v-else>
+      <CCallout color="primary">
         <CButton type="button" color="primary" @click="create">
           Create
         </CButton>
       </CCallout>
-    </div>
-    <div>
       <CTable v-if="popugs.length">
         <CTableHead>
           <CTableRow>
@@ -82,6 +79,7 @@
             <CTableHeaderCell scope="col">Name</CTableHeaderCell>
             <CTableHeaderCell scope="col">Role</CTableHeaderCell>
             <CTableHeaderCell scope="col">Beak Curvature</CTableHeaderCell>
+            <CTableHeaderCell scope="col"></CTableHeaderCell>
           </CTableRow>
         </CTableHead>
         <CTableBody>
@@ -90,6 +88,11 @@
             <CTableDataCell>{{ popug.name }}</CTableDataCell>
             <CTableDataCell>{{ translateRole(popug.role) }}</CTableDataCell>
             <CTableDataCell>{{ popug.beakCurvature }}</CTableDataCell>
+            <CTableDataCell>
+              <CButton type="button" color="primary" @click="edit(popug)">
+                Edit
+              </CButton>
+            </CTableDataCell>
           </CTableRow>
         </CTableBody>
       </CTable>
@@ -99,23 +102,6 @@
 </template>
 
 <script lang="ts">
-import {
-  CContainer,
-  CForm,
-  CFormLabel,
-  CFormInput,
-  CFormText,
-  CFormCheck,
-  CFormRange,
-  CButton,
-  CCallout,
-  CTable,
-  CTableHead,
-  CTableBody,
-  CTableRow,
-  CTableHeaderCell,
-  CTableDataCell
-} from "@coreui/vue";
 import { Options, Vue } from "vue-class-component";
 import axios from "axios";
 class Account {
@@ -126,45 +112,40 @@ class Account {
   beakCurvature = 0;
 }
 
-@Options({
-  components: {
-    CContainer,
-    CForm,
-    CFormLabel,
-    CFormInput,
-    CFormText,
-    CFormCheck,
-    CFormRange,
-    CButton,
-    CCallout,
-    CTable,
-    CTableHead,
-    CTableBody,
-    CTableRow,
-    CTableHeaderCell,
-    CTableDataCell
-  },
-})
+@Options({})
 export default class Accounts extends Vue {
   popugs: Account[] = [];
-  newPopug: Account | null = null;
+  popug: Account | null = null;
 
   async mounted() {
     await this.getAll();
   }
 
   create(): void {
-    this.newPopug = new Account();
+    this.popug = new Account();
   }
 
-  async submit(): Promise<void> {
-    await axios.post("api/add", this.newPopug );
-    this.newPopug = null;
+  edit(p: Account): void {
+    this.popug = p;
+  }
+
+  async post(): Promise<void> {
+    if(this.popug?.id)
+    {
+      await axios.post("api/update", this.popug, { headers: { "X-CSRF": "1" } });
+    }
+    else if(this.popug)
+    {
+      await axios.post("api/add", this.popug, { headers: { "X-CSRF": "1" } });
+    }
+    this.popug = null;
   }
 
   reset(): void {
-    this.newPopug = null;
+    this.popug = null;
   }
+
+
 
   translateRole(roleId: number) {
     switch (roleId) {
@@ -180,7 +161,9 @@ export default class Accounts extends Vue {
   }
 
   private async getAll() {
-    this.popugs = (await axios.get<Account[]>("api/all")).data;
+    this.popugs = (
+      await axios.get<Account[]>("api/all", { headers: { "X-CSRF": "1" } })
+    ).data;
   }
 }
 </script>

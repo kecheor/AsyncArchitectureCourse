@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -8,6 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Popug.Accounts.Repository\Popug.Accounts.Repository.csproj" />
+    <ProjectReference Include="..\Popug.Messages.Contracts\Popug.Messages.Contracts.csproj" />
+    <ProjectReference Include="..\Popug.Messages.Kafka\Popug.Messages.Kafka.csproj" />
     <ProjectReference Include="..\Popug.Tasks.Repository\Popug.Tasks.Repository.csproj" />
   </ItemGroup>
 

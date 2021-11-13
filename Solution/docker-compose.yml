@@ -58,3 +58,11 @@ services:
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+
+  magic:
+    image: digitsy/kafka-magic
+    ports:
+      - "8080:80"
+    environment:
+      KMAGIC_ALLOW_TOPIC_DELETE: "false"
+      KMAGIC_ALLOW_SCHEMA_DELETE: "false"

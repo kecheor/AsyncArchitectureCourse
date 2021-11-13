@@ -1,5 +1,6 @@
 ﻿using IdentityServer4;
 using Microsoft.AspNetCore.Authentication;
+using Popug.Accounts.Repository;
 
 namespace Popug.Accounts.IdentityServer
 {
@@ -19,9 +20,9 @@ namespace Popug.Accounts.IdentityServer
             };
         }
 
-        public async Task<IdentityServerUser?> FindAccount(int curvature)
+        public async Task<IdentityServerUser?> FindAccount(int curvature, CancellationToken cancellationToken)
         {
-            var account = await _accountRepository.Find(curvature);
+            var account = await _accountRepository.Find(curvature, cancellationToken);
             if (account == null)
             {
                 return null;

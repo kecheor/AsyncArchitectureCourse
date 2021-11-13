@@ -1,13 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
-namespace Popug.Accounts
+namespace Popug.Accounts;
+public class AccountsDbContext : DbContext
 {
-    public class AccountsDbContext : DbContext
-    {
-        public DbSet<Account> Accounts { set; get; }
+    public DbSet<Account> Accounts { set; get; }
 
-        public AccountsDbContext(DbContextOptions<AccountsDbContext> options) : base(options)
-        {
-        }
+    public AccountsDbContext(DbContextOptions<AccountsDbContext> options) : base(options)
+    {
     }
 }
