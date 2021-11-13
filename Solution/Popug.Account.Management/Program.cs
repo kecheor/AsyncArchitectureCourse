@@ -36,7 +36,7 @@ JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 builder.Services.AddAuthorization();
 builder.Services.AddOidcAuthentication(builder.Configuration.GetSection("Authentication"));
 builder.Services.AddBff();
-
+builder.Services.AddControllers();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -54,10 +54,9 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapControllers().AsBffApiEndpoint();
     endpoints.MapBffManagementEndpoints();
 });
-app.MapGet("/api/all", (IAccountRepository repository, CancellationToken ct) => repository.GetAll(ct));
-app.MapPost("/api/add", (Account account, IAccountRepository repository, CancellationToken ct) => repository.Add(account, ct));
-app.MapPost("/api/update", (Account account, IAccountRepository repository, CancellationToken ct) => repository.Update(account, ct));
+
 
 app.Run();

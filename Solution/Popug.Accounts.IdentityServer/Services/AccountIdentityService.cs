@@ -1,6 +1,7 @@
 ﻿using IdentityServer4;
 using Microsoft.AspNetCore.Authentication;
 using Popug.Accounts.Repository;
+using System.Security.Claims;
 
 namespace Popug.Accounts.IdentityServer
 {
@@ -31,6 +32,11 @@ namespace Popug.Accounts.IdentityServer
             var isuser = new IdentityServerUser(account.ChipId)
             {
                 DisplayName = account.Name,
+                AdditionalClaims = new[]
+                {
+                    new Claim(ClaimTypes.Name, account.Name),
+                    new Claim(ClaimTypes.Role, account.Role.ToString())
+                }
             };
 
             return isuser;

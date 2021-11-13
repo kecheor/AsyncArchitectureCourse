@@ -48,4 +48,9 @@ public class AccountRepository : IAccountRepository
     {
         return await _dbContext.Accounts.FirstOrDefaultAsync(a => a.BeakCurvature == curvature, cancellationToken);
     }
+
+    public async Task<Account?> Find(string chipId, CancellationToken cancellationToken)
+    {
+        return await _dbContext.Accounts.FirstOrDefaultAsync(a => a.ChipId == chipId, cancellationToken);
+    }
 }

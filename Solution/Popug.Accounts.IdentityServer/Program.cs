@@ -3,6 +3,7 @@ using Popug.Accounts;
 using Popug.Accounts.IdentityServer.Configuration;
 using Popug.Accounts.Repository;
 using Popug.Accounts.IdentityServer;
+using Popug.Accounts.IdentityServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services
     .AddIdentityServer()
     .AddAppAuthRedirectUriValidator()
     .AddDeveloperSigningCredential()
+    .AddProfileService<ProfileService>()
     .AddInMemoryClients(IdentityServerConfiguration.MapClients(builder.Configuration.GetSection("Clients")))
     .AddInMemoryApiScopes(IdentityServerConfiguration.MapScopes(builder.Configuration.GetSection("ApiScopes")))
     .AddInMemoryIdentityResources(IdentityServerConfiguration.MapResources(builder.Configuration.GetSection("Resources")));

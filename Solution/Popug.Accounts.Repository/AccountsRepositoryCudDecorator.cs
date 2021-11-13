@@ -34,6 +34,11 @@ public class AccountsRepositoryCudDecorator : IAccountRepository, IDisposable
         return _accountRepository.Find(curvature, cancellationToken);
     }
 
+    public async Task<Account?> Find(string chipId, CancellationToken cancellationToken)
+    {
+        return await _accountRepository.Find(chipId, cancellationToken);
+    }
+
     public Task<IReadOnlyList<Account>> GetAll(CancellationToken cancellationToken)
     {
         return _accountRepository.GetAll(cancellationToken);
