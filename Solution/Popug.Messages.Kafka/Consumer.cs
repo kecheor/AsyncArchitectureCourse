@@ -1,4 +1,5 @@
-﻿using Popug.Common.Monads;
+﻿using Popug.Common;
+using Popug.Common.Monads;
 using Popug.Common.Monads.Errors;
 using Popug.Messages.Contracts.Events;
 using Popug.Messages.Contracts.Services;
@@ -10,6 +11,7 @@ public class Consumer : IConsumer
 {
     private readonly Confluent.Kafka.IConsumer<Confluent.Kafka.Null, string> _consumer;
     private readonly IEventValueSerializer _serializer;
+    private readonly IMessageErrorLogger _messageErrorLogger;
 
     public Consumer(Confluent.Kafka.IConsumer<Confluent.Kafka.Null, string> consumer, IEventValueSerializer serializer)
     {
@@ -58,7 +60,17 @@ public class Consumer : IConsumer
 
     private Either<EventMessage<TValue>, Error> ParseMessage<TValue>(Confluent.Kafka.ConsumeResult<Confluent.Kafka.Null, string> consumeResult) where TValue : IEventValue
     {
-        return _serializer.Deserialize<TValue>(consumeResult.Value);
+        var result = _serializer.Deserialize<TValue>(consumeResult.Message.Value);
+        if(!result.HasError)
+        {
+            return result.Result;
+        }
+        _messageErrorLogger.LogError(consumeResult.Topic,
+            $"Could not consume message with offsert ${consumeResult.Offset}: {result.Error.ErrorMessage}",
+            consumeResult.Message.Value,
+            (result.Error as ExceptionError)?.Exception,
+            default(CancellationToken));
+        return result.Error;
     }
 
     public void Dispose()

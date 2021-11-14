@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Popug.Accounts.Authentication;
+using Popug.Common;
 using Popug.Common.Services;
 using Popug.Messages.Contracts.Services;
 using Popug.Messages.Kafka;
@@ -17,6 +18,7 @@ builder.Services.AddScoped<Confluent.Kafka.IProducer<Confluent.Kafka.Null, strin
     var config = new Confluent.Kafka.ProducerConfig { BootstrapServers = settings.BootstrapServer, ClientId = settings.ClientId };
     return new Confluent.Kafka.ProducerBuilder<Confluent.Kafka.Null, string>(config).Build();
 });
+builder.Services.AddSingleton<IMessageErrorLogger, MessageErrorLogger>();
 builder.Services.AddSingleton<IEventValueSerializer, EventValueSerializer>();
 builder.Services.AddScoped<IProducer, Producer>();
 builder.Services.AddDbContext<TasksDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("TasksDatabase")));

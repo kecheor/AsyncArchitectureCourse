@@ -5,6 +5,7 @@ using Confluent.Kafka;
 using Error = Popug.Common.Monads.Errors.Error;
 using Popug.Messages.Contracts.Values;
 using Popug.Messages.Contracts.Events;
+using Popug.Common;
 
 namespace Popug.Messages.Kafka
 {
@@ -12,6 +13,7 @@ namespace Popug.Messages.Kafka
     {
         private readonly IProducer<Null, string> _producer;
         private readonly IEventValueSerializer _serializer;
+        private readonly IMessageErrorLogger _messageErrorLogger;
 
         public Producer(IProducer<Null, string> producer)
         {
@@ -23,6 +25,8 @@ namespace Popug.Messages.Kafka
             var serialized = _serializer.Serialize(newEvent);
             if(serialized.HasError)
             {
+                var text = $"Could not serialize message for {newEvent.EventName} event: {serialized.Error.ErrorMessage} in {newEvent.Producer}";
+                await _messageErrorLogger.LogError(newEvent.Producer, text, null, null, default(CancellationToken));
                 return serialized.Error;
             }
 
@@ -41,6 +45,7 @@ namespace Popug.Messages.Kafka
             }
             catch (Exception ex)
             {
+                await _messageErrorLogger.LogError(newEvent.Producer, ex.Message, serialized.Result, ex, default(CancellationToken));
                 return new Either<None, Error>(new ExceptionError(ex));
             }
             
@@ -50,14 +55,14 @@ namespace Popug.Messages.Kafka
             }
             else
             {
-                //TODO:Error handling
+                await _messageErrorLogger.LogError(newEvent.Producer, "Could not commit message", serialized.Result, null, default(CancellationToken));
                 return new Either<None, Error>(new Error("Something went wrong"));
             }
         }
 
         public void Dispose()
         {
-            //_producer.Dispose();
+            _producer.Dispose();
         }
     }
 }

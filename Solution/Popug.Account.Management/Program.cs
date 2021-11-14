@@ -6,12 +6,14 @@ using Popug.Accounts.Authentication;
 using Popug.Messages.Kafka;
 using Popug.Messages.Contracts.Services;
 using Popug.Common.Services;
+using Popug.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IJsonSerializer, CommonJsonSerializer>();
 builder.Services.AddSingleton<IEventValueSerializer, EventValueSerializer>();
+builder.Services.AddSingleton<IMessageErrorLogger, MessageErrorLogger>();
 builder.Services.AddScoped<Confluent.Kafka.IProducer<Confluent.Kafka.Null, string>>(sp =>
 {
     var settings = builder.Configuration.GetSection("KafkaClient").Get<KafkaClientConfiguration>();
