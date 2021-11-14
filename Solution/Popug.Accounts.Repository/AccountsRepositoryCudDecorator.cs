@@ -1,6 +1,5 @@
 ﻿using Popug.Common.Services;
 using Popug.Messages.Contracts.Events;
-using Popug.Messages.Contracts.EventTypes.BE.Tasks;
 using Popug.Messages.Contracts.EventTypes.CUD;
 using Popug.Messages.Contracts.Services;
 namespace Popug.Accounts.Repository;
@@ -25,8 +24,8 @@ public class AccountsRepositoryCudDecorator : IAccountRepository, IDisposable
         var result = await _accountRepository.Add(account, cancellationToken);
         if (result == null)
             return result;
-
-        await _producer.Produce(TOPIC, CreateMetadata(CudEventType.Created), Serialize(account), cancellationToken);
+        var message = new NewEventMessage<Account>(TOPIC, CudEventType.Created, nameof(AccountsRepositoryCudDecorator), account);
+        await _producer.Produce(message, cancellationToken);
         return result;
     }
 
@@ -47,14 +46,9 @@ public class AccountsRepositoryCudDecorator : IAccountRepository, IDisposable
 
     public Task<Account?> Update(Account account, CancellationToken cancellationToken)
     {
-
-        _producer.Produce(TOPIC, CreateMetadata(CudEventType.Updated), Serialize(account), cancellationToken);
+        var message = new NewEventMessage<Account>(TOPIC, CudEventType.Updated, nameof(AccountsRepositoryCudDecorator), account);
+        _producer.Produce(message, cancellationToken);
         return Task.FromResult((Account?)account);
-    }
-
-    private static EventMetadata CreateMetadata(string eventName)
-    {
-        return new EventMetadata(Guid.NewGuid().ToString(), 1, eventName, DateTime.UtcNow, nameof(AccountsRepositoryCudDecorator));
     }
 
     private string Serialize(Account account)

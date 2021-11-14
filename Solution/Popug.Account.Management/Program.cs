@@ -11,11 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IJsonSerializer, CommonJsonSerializer>();
-builder.Services.AddScoped<Confluent.Kafka.IProducer<string, string>>(sp =>
+builder.Services.AddSingleton<IEventValueSerializer, EventValueSerializer>();
+builder.Services.AddScoped<Confluent.Kafka.IProducer<Confluent.Kafka.Null, string>>(sp =>
 {
     var settings = builder.Configuration.GetSection("KafkaClient").Get<KafkaClientConfiguration>();
     var config = new Confluent.Kafka.ProducerConfig { BootstrapServers = settings.BootstrapServer, ClientId = settings.ClientId };
-    return new Confluent.Kafka.ProducerBuilder<string, string>(config).Build();
+    return new Confluent.Kafka.ProducerBuilder<Confluent.Kafka.Null, string>(config).Build();
 });
 builder.Services.AddScoped<IProducer, Producer>();
 builder.Services.AddDbContext<AccountsDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("Accounts")));
