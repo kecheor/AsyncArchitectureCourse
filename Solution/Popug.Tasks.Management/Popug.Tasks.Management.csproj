@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>256ad1cd-96a3-472c-8514-85038a9270b7</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Duende.BFF" Version="1.1.0-preview.1" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Popug.Accounts.Authentication\Popug.Accounts.Authentication.csproj" />
+    <ProjectReference Include="..\Popug.Common\Popug.Common.csproj" />
+    <ProjectReference Include="..\Popug.Messages.Contracts\Popug.Messages.Contracts.csproj" />
+    <ProjectReference Include="..\Popug.Messages.Kafka\Popug.Messages.Kafka.csproj" />
+    <ProjectReference Include="..\Popug.Tasks.Repository\Popug.Tasks.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

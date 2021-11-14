@@ -3,6 +3,7 @@ using Popug.Accounts;
 using Popug.Accounts.IdentityServer.Configuration;
 using Popug.Accounts.Repository;
 using Popug.Accounts.IdentityServer;
+using Popug.Accounts.IdentityServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AccountsDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("Accounts")));
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountIdentityService, AccountIdentityService>();
-builder.Services.AddIdentityServer()
+
+builder.Services
+    .AddIdentityServer()
+    .AddAppAuthRedirectUriValidator()
+    .AddDeveloperSigningCredential()
+    .AddProfileService<ProfileService>()
     .AddInMemoryClients(IdentityServerConfiguration.MapClients(builder.Configuration.GetSection("Clients")))
     .AddInMemoryApiScopes(IdentityServerConfiguration.MapScopes(builder.Configuration.GetSection("ApiScopes")))
     .AddInMemoryIdentityResources(IdentityServerConfiguration.MapResources(builder.Configuration.GetSection("Resources")));
@@ -25,5 +31,10 @@ app.UseRouting();
 app.UseAuthorization();
 app.MapDefaultControllerRoute();
 app.UseIdentityServer();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 app.Run();

@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
+    <PackageReference Include="Confluent.Kafka.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Duende.BFF" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0-rc.2.21480.5">
       <PrivateAssets>all</PrivateAssets>
@@ -20,8 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Popug.Accounts.Authentication\Popug.Accounts.Authentication.csproj" />
     <ProjectReference Include="..\Popug.Accounts.Repository\Popug.Accounts.Repository.csproj" />
     <ProjectReference Include="..\Popug.Common\Popug.Common.csproj" />
+    <ProjectReference Include="..\Popug.Messages.Kafka\Popug.Messages.Kafka.csproj" />
   </ItemGroup>
 
 </Project>

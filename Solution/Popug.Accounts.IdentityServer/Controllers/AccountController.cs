@@ -22,14 +22,14 @@ namespace Popug.Accounts.IdentityServer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string returnUrl, string curvature)
+        public async Task<IActionResult> Login(string returnUrl, string curvature, CancellationToken cancellationToken)
         {
             if (!int.TryParse(curvature, out var c))
             {
                 return View();
             }
 
-            var isuser = await _accountService.FindAccount(c);
+            var isuser = await _accountService.FindAccount(c, cancellationToken);
             if (isuser == null)
             {
                 return View();
@@ -40,7 +40,7 @@ namespace Popug.Accounts.IdentityServer.Controllers
             return Redirect(returnUrl);
         }
 
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout(CancellationToken cancellationToken)
         {
             if (User?.Identity?.IsAuthenticated == true)
             {

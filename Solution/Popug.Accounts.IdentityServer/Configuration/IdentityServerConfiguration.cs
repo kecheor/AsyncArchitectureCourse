@@ -11,6 +11,7 @@ namespace Popug.Accounts.IdentityServer.Configuration
             {
                 ClientId = c.ClientId,
                 ClientSecrets = new[] { new Secret(c.ClientSecret.Sha256()) },
+                AlwaysIncludeUserClaimsInIdToken = true,
                 AllowedGrantTypes = GrantTypes.Code,
                 RedirectUris = c.RedirectUris.Select(u => c.BaseUrl + u).ToArray(),
                 PostLogoutRedirectUris = c.PostLogoutRedirectUris.Select(u => c.BaseUrl + u).ToArray(),
