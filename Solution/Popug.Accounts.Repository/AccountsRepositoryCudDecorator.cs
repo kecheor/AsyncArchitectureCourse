@@ -1,6 +1,7 @@
-﻿using Popug.Common.Events;
-using Popug.Common.Services;
+﻿using Popug.Common.Services;
 using Popug.Messages.Contracts.Events;
+using Popug.Messages.Contracts.EventTypes.BE.Tasks;
+using Popug.Messages.Contracts.EventTypes.CUD;
 using Popug.Messages.Contracts.Services;
 namespace Popug.Accounts.Repository;
 

@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.Messages.Contracts", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.Messages.Kafka", "Popug.Messages.Kafka\Popug.Messages.Kafka.csproj", "{5B47C6E1-669E-4A18-81C2-0BEEE889CD65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.Tasks.Management", "Popug.Tasks.Management\Popug.Tasks.Management.csproj", "{0F38249D-323D-4086-A494-00755248924E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{5B47C6E1-669E-4A18-81C2-0BEEE889CD65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B47C6E1-669E-4A18-81C2-0BEEE889CD65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B47C6E1-669E-4A18-81C2-0BEEE889CD65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F38249D-323D-4086-A494-00755248924E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F38249D-323D-4086-A494-00755248924E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F38249D-323D-4086-A494-00755248924E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F38249D-323D-4086-A494-00755248924E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +93,7 @@ Global
 		{7876DDC8-4F06-4D61-AF6B-857973CEE1ED} = {4B665FA4-2A32-471F-A800-39DC48155F98}
 		{4DEF5299-8764-48D7-B706-A695D3A72406} = {11EF5A04-8C05-4E4A-99D1-EA26CC00091C}
 		{5B47C6E1-669E-4A18-81C2-0BEEE889CD65} = {11EF5A04-8C05-4E4A-99D1-EA26CC00091C}
+		{0F38249D-323D-4086-A494-00755248924E} = {2218F68D-241A-4DE0-AA89-0EA534E030B9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {547477A0-3920-4655-BF7C-610C9E182570}

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Popug.Common
+﻿namespace Popug.Common
 {
-    public enum TaskStatus
+    public enum TaskState
     {
         Active,
         Closed

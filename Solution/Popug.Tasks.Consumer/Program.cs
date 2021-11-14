@@ -21,9 +21,9 @@ services.AddScoped<Confluent.Kafka.IConsumer<string, string>>(sp =>
 });
 services.AddSingleton<IConsumer, Consumer>();
 services.AddDbContext<TasksDbContext>(o => o.UseNpgsql(configuration.GetConnectionString("Database")));
-services.AddSingleton<IAccountRepository, AccountRepository>();
-services.AddSingleton<AccountsConsumer>();
+services.AddSingleton<IPerformerRepository, PerformerRepository>();
+services.AddSingleton<PerformersConsumer>();
 
 var provider = services.BuildServiceProvider();
 
-provider.GetService<AccountsConsumer>()!.Run(default(CancellationToken));
+provider.GetService<PerformersConsumer>()!.Run(default(CancellationToken));

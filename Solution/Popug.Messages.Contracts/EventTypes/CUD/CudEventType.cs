@@ -1,4 +1,4 @@
-﻿namespace Popug.Common.Events;
+﻿namespace Popug.Messages.Contracts.EventTypes.CUD;
 public static class CudEventType
 {
     public const string Created = "Created";

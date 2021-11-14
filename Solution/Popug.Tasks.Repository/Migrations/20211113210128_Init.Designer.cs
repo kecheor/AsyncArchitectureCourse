@@ -12,8 +12,8 @@ using Popug.Tasks.Repository;
 namespace Popug.Tasks.Repository.Migrations
 {
     [DbContext(typeof(TasksDbContext))]
-    [Migration("20211107153107_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20211113210128_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace Popug.Tasks.Repository.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Popug.Tasks.Repository.Account", b =>
+            modelBuilder.Entity("Popug.Tasks.Repository.Models.Performer", b =>
                 {
                     b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,6 +36,9 @@ namespace Popug.Tasks.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -45,40 +48,67 @@ namespace Popug.Tasks.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Performer");
                 });
 
-            modelBuilder.Entity("Popug.Tasks.Repository.Task", b =>
+            modelBuilder.Entity("Popug.Tasks.Repository.Models.TaskData", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
-                    b.Property<DateTime>("CreateTime")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Performer")
+                    b.Property<int>("PerformerId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<string>("TaskPublicId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdateTime")
+                    b.Property<DateTime>("Updated")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PerformerId");
+
                     b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("Popug.Tasks.Repository.Models.TaskPerformerLog", b =>
+                {
+                    b.Property<DateTime>("Assigned")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("PerformerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("integer");
+
+                    b.ToTable("PerformerLogs");
+                });
+
+            modelBuilder.Entity("Popug.Tasks.Repository.Models.TaskData", b =>
+                {
+                    b.HasOne("Popug.Tasks.Repository.Models.Performer", "Performer")
+                        .WithMany()
+                        .HasForeignKey("PerformerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Performer");
                 });
 #pragma warning restore 612, 618
         }

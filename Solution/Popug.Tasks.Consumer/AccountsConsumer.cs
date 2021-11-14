@@ -1,21 +1,23 @@
-﻿using Popug.Common.Events;
-using Popug.Common.Monads;
+﻿using Popug.Common.Monads;
 using Popug.Common.Services;
 using Popug.Messages.Contracts.Events;
+using Popug.Messages.Contracts.EventTypes.BE.Tasks;
+using Popug.Messages.Contracts.EventTypes.CUD;
 using Popug.Messages.Contracts.Services;
+using Popug.Tasks.Repository.Models;
 
 namespace Popug.Tasks.Repository
 {
-    internal class AccountsConsumer
+    internal class PerformersConsumer
     {
         //TODO:From configuration
         private const string TOPIC = "popug-accounts-stream";
 
-        private readonly IAccountRepository _accountRepository;
+        private readonly IPerformerRepository _accountRepository;
         private readonly IConsumer _accountConsumer;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public AccountsConsumer(IAccountRepository accountRepository, IConsumer accountConsumer, IJsonSerializer jsonSerializer)
+        public PerformersConsumer(IPerformerRepository accountRepository, IConsumer accountConsumer, IJsonSerializer jsonSerializer)
         {
             _accountRepository = accountRepository;
             _jsonSerializer = jsonSerializer;
@@ -49,11 +51,11 @@ namespace Popug.Tasks.Repository
             }
         }
 
-        private Either<Account, ExceptionError> Deserialize(string data)
+        private Either<Performer, ExceptionError> Deserialize(string data)
         {
             try
             {
-                return _jsonSerializer.Deserialize<Account>(data);
+                return _jsonSerializer.Deserialize<Performer>(data);
             }
             catch (Exception e)
             {
@@ -72,15 +74,15 @@ namespace Popug.Tasks.Repository
             return await ProcessAccountCUD(consumed.Metadata, deserialized.Result, cancellationToken);
         }
 
-        private async Task<Either<None, Error>> ProcessAccountCUD(EventMetadata metadata, Account account, CancellationToken cancellationToken)
+        private async Task<Either<None, Error>> ProcessAccountCUD(EventMetadata metadata, Performer performer, CancellationToken cancellationToken)
         {
             switch (metadata.Name)
             {
                 case CudEventType.Created:
-                    await _accountRepository.Add(account, cancellationToken);
+                    await _accountRepository.Add(performer, cancellationToken);
                     return Of.None();
                 case CudEventType.Updated:
-                    await _accountRepository.Update(account, cancellationToken);
+                    await _accountRepository.Update(performer, cancellationToken);
                     return Of.None(); 
                 case CudEventType.Deleted:
                 default:
