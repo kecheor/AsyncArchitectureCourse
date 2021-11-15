@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
-[assembly: InternalsVisibleTo("opug.Messages.Contracts.Tests")]
+[assembly: InternalsVisibleTo("Popug.Messages.Contracts.Tests")]
 namespace Popug.Messages.Contracts;
