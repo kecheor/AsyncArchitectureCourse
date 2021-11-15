@@ -4,6 +4,10 @@ using Popug.Messages.Contracts.Values;
 using Error = Popug.Common.Monads.Errors.Error;
 
 namespace Popug.Messages.Contracts.Services;
+/// <summary>
+/// Consumer adapter for the message broker. 
+/// Handles value consuption, deserialization and validation
+/// </summary>
 public interface IConsumer : IDisposable
 {
     Either<EventMessage<TValue>, Error> Consume<TValue>(int millisecondsTimeout) where TValue : IEventValue;

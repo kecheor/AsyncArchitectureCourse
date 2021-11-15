@@ -3,6 +3,7 @@ using Popug.Common.Monads.Errors;
 using Popug.Messages.Contracts.Events;
 using Popug.Messages.Contracts.EventTypes.CUD;
 using Popug.Messages.Contracts.Services;
+using Popug.Messages.Contracts.Values.CUD.Popugs;
 using Popug.Tasks.Repository.Models;
 
 namespace Popug.Tasks.Repository
@@ -30,7 +31,7 @@ namespace Popug.Tasks.Repository
                 {
                     try
                     {
-                        var cudEvent = _accountConsumer.Consume<Performer>(cancellationToken);
+                        var cudEvent = _accountConsumer.Consume<PopugValue>(cancellationToken);
                         cudEvent.Apply(
                             async p => await ProcessAccountCUD(p, cancellationToken),
                             //TODO:Logging
@@ -48,19 +49,20 @@ namespace Popug.Tasks.Repository
             }
         }
 
-        private async Task<Either<None, Error>> ProcessAccountCUD(EventMessage<Performer> consumed, CancellationToken cancellationToken)
+        private async Task<Either<None, Error>> ProcessAccountCUD(EventMessage<PopugValue> consumed, CancellationToken cancellationToken)
         {
-            switch (consumed.Metadata.Name)
+            var performer = new Performer(null, consumed.Value.ChipId, consumed.Value.Name, consumed.Value.Role, DateTime.UtcNow);
+            switch (consumed.Metadata.EventName)
             {
                 case CudEventType.Created:
-                    await _accountRepository.Add(consumed.Value, cancellationToken);
+                    await _accountRepository.Add(performer, cancellationToken);
                     return Of.None();
                 case CudEventType.Updated:
-                    await _accountRepository.Update(consumed.Value, cancellationToken);
+                    await _accountRepository.Update(performer, cancellationToken);
                     return Of.None(); 
                 case CudEventType.Deleted:
                 default:
-                    return new Error($"Unknown CUD event action {consumed.Metadata.Name}");
+                    return new Error($"Unknown CUD event action {consumed.Metadata.EventName}");
             }
         }
     }

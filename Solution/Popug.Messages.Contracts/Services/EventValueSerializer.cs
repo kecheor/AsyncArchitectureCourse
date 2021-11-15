@@ -50,9 +50,9 @@ namespace Popug.Messages.Contracts.Services
             try
             {
                 var value = _jsonSerializer.Deserialize<TValue>(message.Value);
-                if(value.Version != message.Metadata.Version)
+                if(value.Version != message.Metadata.DataVersion)
                 {
-                    return new MessageEventError($"Currently backward compatibilty is not supported. Target verion: {value.Version}. Message version: {message.Metadata.Version}", json);
+                    return new MessageEventError($"Currently backward compatibilty is not supported. Target verion: {value.Version}. Message version: {message.Metadata.DataVersion}", json);
                 }
                 return new EventMessage<TValue>(message.Metadata, value);
             }
@@ -61,9 +61,9 @@ namespace Popug.Messages.Contracts.Services
                 try
                 {
                     var version = _jsonSerializer.Deserialize<EventVersionFallback>(message.Value);
-                    if (version.Version != message.Metadata.Version)
+                    if (version.Version != message.Metadata.DataVersion)
                     {
-                        return new MessageEventError($"Currently backward compatibilty is not supported. Target verion: {version.Version}. Message version: {message.Metadata.Version}", json);
+                        return new MessageEventError($"Currently backward compatibilty is not supported. Target verion: {version.Version}. Message version: {message.Metadata.DataVersion}", json);
                     }
                     return new MessageEventError($"Could not deserialize message to {typeof(TValue).FullName}", json);
                 }

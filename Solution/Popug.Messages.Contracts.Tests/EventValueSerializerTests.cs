@@ -35,7 +35,7 @@ namespace Popug.Messages.Contracts.Tests
             json.Apply(r => serializer.Deserialize<v1Value>(r)
                 .Apply(v =>
                 {
-                    v.Metadata.Version.Should().Be(value.Version);
+                    v.Metadata.DataVersion.Should().Be(value.Version);
                     v.Value.Version.Should().Be(value.Version);
                     v.Value.Value.Should().Be(value.Value);
                 },

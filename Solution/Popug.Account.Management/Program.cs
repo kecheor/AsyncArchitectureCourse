@@ -12,15 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IJsonSerializer, CommonJsonSerializer>();
-builder.Services.AddSingleton<IEventValueSerializer, EventValueSerializer>();
-builder.Services.AddSingleton<IMessageErrorLogger, MessageErrorLogger>();
-builder.Services.AddScoped<Confluent.Kafka.IProducer<Confluent.Kafka.Null, string>>(sp =>
-{
-    var settings = builder.Configuration.GetSection("KafkaClient").Get<KafkaClientConfiguration>();
-    var config = new Confluent.Kafka.ProducerConfig { BootstrapServers = settings.BootstrapServer, ClientId = settings.ClientId };
-    return new Confluent.Kafka.ProducerBuilder<Confluent.Kafka.Null, string>(config).Build();
-});
-builder.Services.AddScoped<IProducer, Producer>();
+
 builder.Services.AddDbContext<AccountsDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("Accounts")));
 builder.Services.AddScoped<AccountRepository>();
 builder.Services.AddScoped(serviceProvider =>
@@ -31,6 +23,9 @@ builder.Services.AddScoped(serviceProvider =>
     IAccountRepository cudDecorator = new AccountsRepositoryCudDecorator(concreteService, producer, serializer);
     return cudDecorator;
 });
+builder.Services
+    .AddCommonKafkaServices()
+    .AddKafkaConsumer(builder.Configuration.GetSection("KafkaClient"));
 
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

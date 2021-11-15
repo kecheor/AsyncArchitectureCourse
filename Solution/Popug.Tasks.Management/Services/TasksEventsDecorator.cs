@@ -48,8 +48,8 @@ public class TasksEventsDecorator : ITasksService
         }
         var newTask = result.Result;
 
-        var cudValue = new SharedTask(newTask.Id, newTask.Description, newTask.PerformerId, newTask.State, newTask.Created);
-        var cudMessage = new NewEventMessage<SharedTask>(CUD_TOPIC, CudEventType.Created, nameof(TasksEventsDecorator), cudValue);
+        var cudValue = new TaskValue(newTask.Id, newTask.Description, newTask.PerformerId, newTask.State, newTask.Created);
+        var cudMessage = new NewEventMessage<TaskValue>(CUD_TOPIC, CudEventType.Created, nameof(TasksEventsDecorator), cudValue);
         var cudEvent = _producer.Produce(cudMessage, cancellationToken);
 
         var beValue = new TaskStateChange(newTask.Id, newTask.PerformerId, newTask.Created);
