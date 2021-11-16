@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Popug.Common\Popug.Common.csproj" />
+    <ProjectReference Include="..\Popug.Messages.Contracts\Popug.Messages.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

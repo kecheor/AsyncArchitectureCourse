@@ -1,4 +1,4 @@
-﻿namespace Popug.Common.Monads;
+﻿namespace Popug.Common.Monads.Errors;
 public class Error
 {
     public string ErrorMessage { get; }

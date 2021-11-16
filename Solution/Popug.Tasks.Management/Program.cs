@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Popug.Accounts.Authentication;
+using Popug.Common;
 using Popug.Common.Services;
 using Popug.Messages.Contracts.Services;
 using Popug.Messages.Kafka;
@@ -11,12 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddSingleton<IJsonSerializer, CommonJsonSerializer>();
-builder.Services.AddScoped<Confluent.Kafka.IProducer<string, string>>(sp =>
+builder.Services.AddScoped<Confluent.Kafka.IProducer<Confluent.Kafka.Null, string>>(sp =>
 {
     var settings = builder.Configuration.GetSection("KafkaClient").Get<KafkaClientConfiguration>();
     var config = new Confluent.Kafka.ProducerConfig { BootstrapServers = settings.BootstrapServer, ClientId = settings.ClientId };
-    return new Confluent.Kafka.ProducerBuilder<string, string>(config).Build();
+    return new Confluent.Kafka.ProducerBuilder<Confluent.Kafka.Null, string>(config).Build();
 });
+builder.Services.AddSingleton<IMessageErrorLogger, MessageErrorLogger>();
+builder.Services.AddSingleton<IEventValueSerializer, EventValueSerializer>();
 builder.Services.AddScoped<IProducer, Producer>();
 builder.Services.AddDbContext<TasksDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("TasksDatabase")));
 builder.Services.AddScoped<ITasksRepository, TasksRepository>();
@@ -24,8 +27,7 @@ builder.Services.AddScoped(serviceProvider =>
 {
     IProducer producer = serviceProvider.GetService<IProducer>()!;
     ITasksService concreteService = serviceProvider.GetService<TasksService>()!;
-    IJsonSerializer serializer = serviceProvider.GetService<IJsonSerializer>()!;
-    ITasksService producerDecorator = new TasksEventsDecorator(concreteService, producer, serializer);
+    ITasksService producerDecorator = new TasksEventsDecorator(concreteService, producer);
     return producerDecorator;
 });
 builder.Services.AddAuthorization();

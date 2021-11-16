@@ -1,2 +1,10 @@
 ﻿namespace Popug.Messages.Contracts.Events;
-public record EventMetadata (string Id, int Version, string Name, DateTime Timestamp, string Producer);
+/// <summary>
+/// Metadata attached to the values when transfered throw the message broker
+/// </summary>
+/// <param name="Id">Internal event id</param>
+/// <param name="DataVersion">Data vesrion inside the message</param>
+/// <param name="VersionName">Event name</param>
+/// <param name="Timestamp">UTC timestamp when message was created</param>
+/// <param name="Producer">Name of the producer that published the message</param>
+public record EventMetadata (string Id, int DataVersion, string EventName, DateTime Timestamp, string Producer);

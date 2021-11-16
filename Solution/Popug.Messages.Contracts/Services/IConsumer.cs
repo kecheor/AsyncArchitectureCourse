@@ -1,15 +1,20 @@
 ﻿using Popug.Common.Monads;
 using Popug.Messages.Contracts.Events;
-using Error = Popug.Common.Monads.Error;
+using Popug.Messages.Contracts.Values;
+using Error = Popug.Common.Monads.Errors.Error;
 
 namespace Popug.Messages.Contracts.Services;
+/// <summary>
+/// Consumer adapter for the message broker. 
+/// Handles value consuption, deserialization and validation
+/// </summary>
 public interface IConsumer : IDisposable
 {
-    Either<ConsumedEvent, Error> Consume(int millisecondsTimeout);
+    Either<EventMessage<TValue>, Error> Consume<TValue>(int millisecondsTimeout) where TValue : IEventValue;
 
-    Either<ConsumedEvent, Error> Consume(CancellationToken cancellationToken = default(CancellationToken));
+    Either<EventMessage<TValue>, Error> Consume<TValue>(CancellationToken cancellationToken = default(CancellationToken)) where TValue : IEventValue;
 
-    Either<ConsumedEvent, Error> Consume(TimeSpan timeout);
+    Either<EventMessage<TValue>, Error> Consume<TValue>(TimeSpan timeout) where TValue : IEventValue;
 
     void Subscribe(IEnumerable<string> topics);
 

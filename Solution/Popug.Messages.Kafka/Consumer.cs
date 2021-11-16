@@ -1,18 +1,22 @@
-﻿using Popug.Common.Monads;
-using Popug.Common.Services;
+﻿using Popug.Common;
+using Popug.Common.Monads;
+using Popug.Common.Monads.Errors;
 using Popug.Messages.Contracts.Events;
 using Popug.Messages.Contracts.Services;
+using Popug.Messages.Contracts.Values;
+
 namespace Popug.Messages.Kafka;
 
 public class Consumer : IConsumer
 {
-    private readonly Confluent.Kafka.IConsumer<string, string> _consumer;
-    private readonly IJsonSerializer _jsonSerializer;
+    private readonly Confluent.Kafka.IConsumer<Confluent.Kafka.Null, string> _consumer;
+    private readonly IEventValueSerializer _serializer;
+    private readonly IMessageErrorLogger _messageErrorLogger;
 
-    public Consumer(Confluent.Kafka.IConsumer<string, string> consumer, IJsonSerializer jsonSerializer)
+    public Consumer(Confluent.Kafka.IConsumer<Confluent.Kafka.Null, string> consumer, IEventValueSerializer serializer)
     {
         _consumer = consumer;
-        _jsonSerializer = jsonSerializer;
+        _serializer = serializer;
     }
 
     public void Subscribe(IEnumerable<string> topics)
@@ -36,47 +40,37 @@ public class Consumer : IConsumer
     }
     
 
-    public Either<ConsumedEvent, Error> Consume(int millisecondsTimeout)
+    public Either<EventMessage<TValue>, Error> Consume<TValue>(int millisecondsTimeout) where TValue : IEventValue
     {
-        return ParseEvent(_consumer.Consume(millisecondsTimeout));
+        var message = _consumer.Consume(millisecondsTimeout);
+        return ParseMessage<TValue>(message);
     }
 
-    public Either<ConsumedEvent, Error> Consume(CancellationToken cancellationToken = default)
+    public Either<EventMessage<TValue>, Error> Consume<TValue>(CancellationToken cancellationToken = default) where TValue : IEventValue
     {
-        return ParseEvent(_consumer.Consume(cancellationToken));
+        var message = _consumer.Consume(cancellationToken);
+        return ParseMessage<TValue>(message);
     }
 
-    public Either<ConsumedEvent, Error> Consume(TimeSpan timeout)
+    public Either<EventMessage<TValue>, Error> Consume<TValue>(TimeSpan timeout) where TValue : IEventValue
     {
-        return ParseEvent(_consumer.Consume(timeout));
+        var message = _consumer.Consume(timeout);
+        return ParseMessage<TValue>(message);
     }
 
-    private Either<ConsumedEvent, Error> ParseEvent(Confluent.Kafka.ConsumeResult<string, string> consumeResult)
+    private Either<EventMessage<TValue>, Error> ParseMessage<TValue>(Confluent.Kafka.ConsumeResult<Confluent.Kafka.Null, string> consumeResult) where TValue : IEventValue
     {
-        if(string.IsNullOrEmpty(consumeResult?.Message?.Value))
+        var result = _serializer.Deserialize<TValue>(consumeResult.Message.Value);
+        if(!result.HasError)
         {
-            return Either<ConsumedEvent, Error>.Failure(new Error("Consumed data is empty"));
+            return result.Result;
         }
-        EventMessage value;
-        try
-        {
-            //TODO: Event versioning
-            value = _jsonSerializer.Deserialize<EventMessage>(consumeResult.Message.Value);
-        }
-        catch (Exception ex)
-        {
-            //TODO: Error handling
-            return Either<ConsumedEvent, Error>.Failure(new ExceptionError(ex));
-        }
-
-        var result = new ConsumedEvent()
-        {
-            Topic = consumeResult.Topic,
-            Metadata = value.Metadata,
-            SerializedValue = value.Value
-        };
-
-        return Either<ConsumedEvent, Error>.Success(result);
+        _messageErrorLogger.LogError(consumeResult.Topic,
+            $"Could not consume message with offsert ${consumeResult.Offset}: {result.Error.ErrorMessage}",
+            consumeResult.Message.Value,
+            (result.Error as ExceptionError)?.Exception,
+            default(CancellationToken));
+        return result.Error;
     }
 
     public void Dispose()

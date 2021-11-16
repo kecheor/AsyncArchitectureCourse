@@ -1,4 +1,5 @@
 ﻿using Popug.Common.Monads;
+using Popug.Common.Monads.Errors;
 using Popug.Common.Services;
 using Popug.Messages.Contracts.Events;
 using Popug.Messages.Contracts.EventTypes.BE.Tasks;
@@ -14,17 +15,15 @@ public class TasksEventsDecorator : ITasksService
     private readonly ITasksService _inner;
     //TODO:Lazy
     private readonly IProducer _producer;
-    private readonly IJsonSerializer _jsonSerializer;
 
     //TODO:From configuration
     private static string CUD_TOPIC = "popug-tasks-stream";
     private static string BE_TOPIC = "popug-tasks-events";
 
-    public TasksEventsDecorator(ITasksService innerService, IProducer producer, IJsonSerializer serializer)
+    public TasksEventsDecorator(ITasksService innerService, IProducer producer)
     {
         _inner = innerService;
         _producer = producer;
-        _jsonSerializer = serializer;
     }
 
     public async Task<Either<None, Error>> Close(string performerId, string taskId, CancellationToken cancellationToken)
@@ -34,9 +33,10 @@ public class TasksEventsDecorator : ITasksService
         {
             return result.Error;
         }
-        var value = _jsonSerializer.Serialize(new TaskStateChange(taskId, performerId, DateTime.UtcNow));
+        var value = new TaskStateChange(taskId, performerId, DateTime.UtcNow);
+        var message = new NewEventMessage<TaskStateChange>(BE_TOPIC, TaskBusinessEvent.Assigned, nameof(TasksEventsDecorator), value);
         //TODO Error handling
-        return await _producer.Produce(BE_TOPIC, CreateMetadata(TaskBusinessEvent.Closed), value, cancellationToken);
+        return await _producer.Produce(message, cancellationToken);
     }
 
     public async Task<Either<TaskDto, Error>> Create(string manager, string taskDescription, CancellationToken cancellationToken)
@@ -47,10 +47,14 @@ public class TasksEventsDecorator : ITasksService
             return result.Error;
         }
         var newTask = result.Result;
-        var cudValue = _jsonSerializer.Serialize(new SharedTask(newTask.Id, newTask.Description, newTask.PerformerId, newTask.State, newTask.Created));
-        var beValue = _jsonSerializer.Serialize(new TaskStateChange(newTask.Id, newTask.PerformerId, newTask.Created));
-        var cudEvent = _producer.Produce(CUD_TOPIC, CreateMetadata(CudEventType.Created), cudValue, cancellationToken);
-        var beEvent = _producer.Produce(BE_TOPIC, CreateMetadata(TaskBusinessEvent.Assigned), beValue, cancellationToken);
+
+        var cudValue = new TaskValue(newTask.Id, newTask.Description, newTask.PerformerId, newTask.State, newTask.Created);
+        var cudMessage = new NewEventMessage<TaskValue>(CUD_TOPIC, CudEventType.Created, nameof(TasksEventsDecorator), cudValue);
+        var cudEvent = _producer.Produce(cudMessage, cancellationToken);
+
+        var beValue = new TaskStateChange(newTask.Id, newTask.PerformerId, newTask.Created);
+        var beMessage = new NewEventMessage<TaskStateChange>(BE_TOPIC, TaskBusinessEvent.Assigned, nameof(TasksEventsDecorator), beValue);
+        var beEvent = _producer.Produce(beMessage, cancellationToken);
         //TODO Error handling
         await Task.WhenAll(cudEvent, beEvent);
         return newTask;
@@ -72,17 +76,13 @@ public class TasksEventsDecorator : ITasksService
         var events = new List<Task<Either<None, Error>>>();
         foreach(var task in result.Result)
         {
-            var beValue = _jsonSerializer.Serialize(new TaskStateChange(task.TaskId, task.PerformerId, task.Timestamp));
-            var beEvent = _producer.Produce(BE_TOPIC, CreateMetadata(TaskBusinessEvent.Assigned), beValue, cancellationToken);
+            var beValue = new TaskStateChange(task.TaskId, task.PerformerId, task.Timestamp);
+            var beMessage = new NewEventMessage<TaskStateChange>(BE_TOPIC, TaskBusinessEvent.Assigned, nameof(TasksEventsDecorator), beValue);
+            var beEvent = _producer.Produce(beMessage, cancellationToken);
             events.Add(beEvent);
         }
         //TODO Error handling
         await Task.WhenAll(events);
         return Either<IReadOnlyList<StateChangeLog>, Error>.Success(result.Result);
-    }
-
-    private static EventMetadata CreateMetadata(string eventName)
-    {
-        return new EventMetadata(Guid.NewGuid().ToString(), 1, eventName, DateTime.UtcNow, nameof(TasksEventsDecorator));
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Popug.Common.Monads;
-using Popug.Common.Services;
+using Popug.Common.Monads.Errors;
 using Popug.Messages.Contracts.Events;
-using Popug.Messages.Contracts.EventTypes.BE.Tasks;
 using Popug.Messages.Contracts.EventTypes.CUD;
 using Popug.Messages.Contracts.Services;
+using Popug.Messages.Contracts.Values.CUD.Popugs;
 using Popug.Tasks.Repository.Models;
 
 namespace Popug.Tasks.Repository
@@ -15,12 +15,10 @@ namespace Popug.Tasks.Repository
 
         private readonly IPerformerRepository _accountRepository;
         private readonly IConsumer _accountConsumer;
-        private readonly IJsonSerializer _jsonSerializer;
 
-        public PerformersConsumer(IPerformerRepository accountRepository, IConsumer accountConsumer, IJsonSerializer jsonSerializer)
+        public PerformersConsumer(IPerformerRepository accountRepository, IConsumer accountConsumer)
         {
             _accountRepository = accountRepository;
-            _jsonSerializer = jsonSerializer;
             _accountConsumer = accountConsumer;
         }
 
@@ -33,9 +31,9 @@ namespace Popug.Tasks.Repository
                 {
                     try
                     {
-                        var cudEvent = _accountConsumer.Consume(cancellationToken);
+                        var cudEvent = _accountConsumer.Consume<PopugValue>(cancellationToken);
                         cudEvent.Apply(
-                            async account => await ProcessAccountCUD(account, cancellationToken),
+                            async p => await ProcessAccountCUD(p, cancellationToken),
                             //TODO:Logging
                             err => Task.FromResult(0));
                     }
@@ -51,32 +49,10 @@ namespace Popug.Tasks.Repository
             }
         }
 
-        private Either<Performer, ExceptionError> Deserialize(string data)
+        private async Task<Either<None, Error>> ProcessAccountCUD(EventMessage<PopugValue> consumed, CancellationToken cancellationToken)
         {
-            try
-            {
-                return _jsonSerializer.Deserialize<Performer>(data);
-            }
-            catch (Exception e)
-            {
-                return new ExceptionError(e);
-            }
-            
-        }
-
-        private async Task<Either<None, Error>> ProcessAccountCUD(ConsumedEvent consumed, CancellationToken cancellationToken)
-        {
-            var deserialized = Deserialize(consumed.SerializedValue);
-            if(deserialized.HasError)
-            {
-                return deserialized.Error;
-            }
-            return await ProcessAccountCUD(consumed.Metadata, deserialized.Result, cancellationToken);
-        }
-
-        private async Task<Either<None, Error>> ProcessAccountCUD(EventMetadata metadata, Performer performer, CancellationToken cancellationToken)
-        {
-            switch (metadata.Name)
+            var performer = new Performer(null, consumed.Value.ChipId, consumed.Value.Name, consumed.Value.Role, DateTime.UtcNow);
+            switch (consumed.Metadata.EventName)
             {
                 case CudEventType.Created:
                     await _accountRepository.Add(performer, cancellationToken);
@@ -86,7 +62,7 @@ namespace Popug.Tasks.Repository
                     return Of.None(); 
                 case CudEventType.Deleted:
                 default:
-                    return new Error($"Unknown CUD event action {metadata.Name}");
+                    return new Error($"Unknown CUD event action {consumed.Metadata.EventName}");
             }
         }
     }
