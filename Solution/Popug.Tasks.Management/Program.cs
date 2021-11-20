@@ -27,7 +27,8 @@ builder.Services.AddScoped(serviceProvider =>
 {
     IProducer producer = serviceProvider.GetService<IProducer>()!;
     ITasksService concreteService = serviceProvider.GetService<TasksService>()!;
-    ITasksService producerDecorator = new TasksEventsDecorator(concreteService, producer);
+    ILogger<ITasksService> logger = serviceProvider.GetService<ILogger<ITasksService>>()!;
+    ITasksService producerDecorator = new TasksEventsDecorator(concreteService, producer, logger);
     return producerDecorator;
 });
 builder.Services.AddAuthorization();

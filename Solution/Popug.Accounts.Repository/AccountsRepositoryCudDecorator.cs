@@ -12,15 +12,13 @@ public class AccountsRepositoryCudDecorator : IAccountRepository, IDisposable
 {
     private readonly IAccountRepository _accountRepository;
     private readonly IProducer _producer;
-    private readonly IJsonSerializer _jsonSerializer;
     //TODO:From configuration
     private static string TOPIC = "popug-accounts-stream";
 
-    public AccountsRepositoryCudDecorator(IAccountRepository accountRepository, IProducer producer, IJsonSerializer jsonSerializer)
+    public AccountsRepositoryCudDecorator(IAccountRepository accountRepository, IProducer producer)
     {
         _accountRepository = accountRepository;
         _producer = producer;
-        _jsonSerializer = jsonSerializer;
     }
 
     public async Task<Either<Account, Error>> Add(Account account, CancellationToken cancellationToken)
@@ -64,11 +62,6 @@ public class AccountsRepositoryCudDecorator : IAccountRepository, IDisposable
         var message = new NewEventMessage<PopugValue>(TOPIC, CudEventType.Updated, nameof(AccountsRepositoryCudDecorator), popug);
         await _producer.Produce(message, cancellationToken);
         return account;
-    }
-
-    private string Serialize(Account account)
-    {
-        return _jsonSerializer.Serialize(account);
     }
 
     public void Dispose()

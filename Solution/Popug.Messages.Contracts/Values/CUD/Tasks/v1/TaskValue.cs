@@ -1,4 +1,5 @@
-﻿using Popug.Common;
+﻿using Popug.Common.Enums;
+
 namespace Popug.Messages.Contracts.Values.CUD.Tasks.v1;
 /// <summary>
 /// First version of CUD event value for task

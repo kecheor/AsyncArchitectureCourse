@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Popug.Common;
+using Popug.Common.Enums;
 using Popug.Tasks.Repository.Models;
 
 namespace Popug.Tasks.Repository.Repositories
@@ -7,7 +7,6 @@ namespace Popug.Tasks.Repository.Repositories
     public class TasksRepository : ITasksRepository
     {
         private readonly TasksDbContext _dbContext;
-
         public TasksRepository(TasksDbContext dbContext)
         {
             _dbContext = dbContext;

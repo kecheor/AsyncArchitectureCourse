@@ -1,6 +1,5 @@
 ﻿using Popug.Common.Monads;
 using Popug.Common.Monads.Errors;
-using Popug.Common.Services;
 using Popug.Messages.Contracts.Events;
 using Popug.Messages.Contracts.EventTypes.BE.Tasks;
 using Popug.Messages.Contracts.EventTypes.CUD;
@@ -15,15 +14,17 @@ public class TasksEventsDecorator : ITasksService
     private readonly ITasksService _inner;
     //TODO:Lazy
     private readonly IProducer _producer;
+    private readonly ILogger<ITasksService> _logger;
 
     //TODO:From configuration
     private static string CUD_TOPIC = "popug-tasks-stream";
     private static string BE_TOPIC = "popug-tasks-events";
 
-    public TasksEventsDecorator(ITasksService innerService, IProducer producer)
+    public TasksEventsDecorator(ITasksService innerService, IProducer producer, ILogger<ITasksService> logger)
     {
         _inner = innerService;
         _producer = producer;
+        _logger = logger;
     }
 
     public async Task<Either<None, Error>> Close(string performerId, string taskId, CancellationToken cancellationToken)
@@ -35,7 +36,7 @@ public class TasksEventsDecorator : ITasksService
         }
         var value = new TaskStateChange(taskId, performerId, DateTime.UtcNow);
         var message = new NewEventMessage<TaskStateChange>(BE_TOPIC, TaskBusinessEvent.Assigned, nameof(TasksEventsDecorator), value);
-        //TODO Error handling
+        _logger.LogInformation($"Sending BE to {BE_TOPIC} task {taskId} is closed by {performerId}");
         return await _producer.Produce(message, cancellationToken);
     }
 
@@ -51,11 +52,11 @@ public class TasksEventsDecorator : ITasksService
         var cudValue = new TaskValue(newTask.Id, newTask.Description, newTask.PerformerId, newTask.State, newTask.Created);
         var cudMessage = new NewEventMessage<TaskValue>(CUD_TOPIC, CudEventType.Created, nameof(TasksEventsDecorator), cudValue);
         var cudEvent = _producer.Produce(cudMessage, cancellationToken);
-
+        _logger.LogInformation($"Sending CUD to {CUD_TOPIC} task {newTask.Id} is created");
         var beValue = new TaskStateChange(newTask.Id, newTask.PerformerId, newTask.Created);
         var beMessage = new NewEventMessage<TaskStateChange>(BE_TOPIC, TaskBusinessEvent.Assigned, nameof(TasksEventsDecorator), beValue);
         var beEvent = _producer.Produce(beMessage, cancellationToken);
-        //TODO Error handling
+        _logger.LogInformation($"Sending BE to {BE_TOPIC} task {newTask.Id} is assiged to {newTask.PerformerId}");
         await Task.WhenAll(cudEvent, beEvent);
         return newTask;
     }
@@ -79,9 +80,9 @@ public class TasksEventsDecorator : ITasksService
             var beValue = new TaskStateChange(task.TaskId, task.PerformerId, task.Timestamp);
             var beMessage = new NewEventMessage<TaskStateChange>(BE_TOPIC, TaskBusinessEvent.Assigned, nameof(TasksEventsDecorator), beValue);
             var beEvent = _producer.Produce(beMessage, cancellationToken);
+            _logger.LogInformation($"Sending BE to {BE_TOPIC} task {task.TaskId} is assiged to {task.PerformerId}");
             events.Add(beEvent);
         }
-        //TODO Error handling
         await Task.WhenAll(events);
         return Either<IReadOnlyList<StateChangeLog>, Error>.Success(result.Result);
     }

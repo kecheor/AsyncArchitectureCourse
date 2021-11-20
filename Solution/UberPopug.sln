@@ -34,7 +34,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popug.Messages.Kafka", "Pop
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popug.Tasks.Management", "Popug.Tasks.Management\Popug.Tasks.Management.csproj", "{0F38249D-323D-4086-A494-00755248924E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.Messages.Contracts.Tests", "Popug.Messages.Contracts.Tests\Popug.Messages.Contracts.Tests.csproj", "{13499F9E-DA12-42BA-841E-FF42CF792140}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popug.Messages.Contracts.Tests", "Popug.Messages.Contracts.Tests\Popug.Messages.Contracts.Tests.csproj", "{13499F9E-DA12-42BA-841E-FF42CF792140}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Billing", "Billing", "{2B5048BC-D50F-4FD5-AA71-5E874C61DDFB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reporting", "Reporting", "{0940DEF2-F297-4DD8-91A8-F2D8A2BD7C41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.Billing.Pricing", "Popug.Billing.Pricing\Popug.Billing.Pricing.csproj", "{76B0C568-AB31-42CF-9CA1-C7D0E2D6857F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.BillingRepository", "Popug.BillingRepository\Popug.BillingRepository.csproj", "{C1DCCCBB-788B-4EA8-8378-1625DDC92891}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.Billing.Repository.Redis", "Popug.Billing.Repository.Redis\Popug.Billing.Repository.Redis.csproj", "{706E6BAB-F6E0-4720-970B-23A47BA67EC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +96,18 @@ Global
 		{13499F9E-DA12-42BA-841E-FF42CF792140}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13499F9E-DA12-42BA-841E-FF42CF792140}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13499F9E-DA12-42BA-841E-FF42CF792140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76B0C568-AB31-42CF-9CA1-C7D0E2D6857F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76B0C568-AB31-42CF-9CA1-C7D0E2D6857F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76B0C568-AB31-42CF-9CA1-C7D0E2D6857F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76B0C568-AB31-42CF-9CA1-C7D0E2D6857F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1DCCCBB-788B-4EA8-8378-1625DDC92891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1DCCCBB-788B-4EA8-8378-1625DDC92891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1DCCCBB-788B-4EA8-8378-1625DDC92891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1DCCCBB-788B-4EA8-8378-1625DDC92891}.Release|Any CPU.Build.0 = Release|Any CPU
+		{706E6BAB-F6E0-4720-970B-23A47BA67EC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{706E6BAB-F6E0-4720-970B-23A47BA67EC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{706E6BAB-F6E0-4720-970B-23A47BA67EC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{706E6BAB-F6E0-4720-970B-23A47BA67EC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +123,9 @@ Global
 		{5B47C6E1-669E-4A18-81C2-0BEEE889CD65} = {11EF5A04-8C05-4E4A-99D1-EA26CC00091C}
 		{0F38249D-323D-4086-A494-00755248924E} = {2218F68D-241A-4DE0-AA89-0EA534E030B9}
 		{13499F9E-DA12-42BA-841E-FF42CF792140} = {11EF5A04-8C05-4E4A-99D1-EA26CC00091C}
+		{76B0C568-AB31-42CF-9CA1-C7D0E2D6857F} = {2B5048BC-D50F-4FD5-AA71-5E874C61DDFB}
+		{C1DCCCBB-788B-4EA8-8378-1625DDC92891} = {2B5048BC-D50F-4FD5-AA71-5E874C61DDFB}
+		{706E6BAB-F6E0-4720-970B-23A47BA67EC7} = {2B5048BC-D50F-4FD5-AA71-5E874C61DDFB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {547477A0-3920-4655-BF7C-610C9E182570}

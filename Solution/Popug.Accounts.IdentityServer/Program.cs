@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Popug.Accounts;
 using Popug.Accounts.IdentityServer.Configuration;
 using Popug.Accounts.Repository;
-using Popug.Accounts.IdentityServer;
 using Popug.Accounts.IdentityServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);

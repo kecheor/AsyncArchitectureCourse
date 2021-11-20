@@ -1,4 +1,3 @@
-using Popug.Accounts;
 using System.IdentityModel.Tokens.Jwt;
 using Popug.Accounts.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -19,8 +18,7 @@ builder.Services.AddScoped(serviceProvider =>
 {
     IProducer producer = serviceProvider.GetService<IProducer>()!;
     IAccountRepository concreteService = serviceProvider.GetService<AccountRepository>()!;
-    IJsonSerializer serializer = serviceProvider.GetService<IJsonSerializer>()!;
-    IAccountRepository cudDecorator = new AccountsRepositoryCudDecorator(concreteService, producer, serializer);
+    IAccountRepository cudDecorator = new AccountsRepositoryCudDecorator(concreteService, producer);
     return cudDecorator;
 });
 builder.Services
