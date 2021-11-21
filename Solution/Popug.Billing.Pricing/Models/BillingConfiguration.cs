@@ -1,6 +1,6 @@
 ﻿namespace Popug.Billing.Pricing.Models
 {
-    public class BillingConfiguration
+    public class BillingServicesConfiguration : IPriceEstimationConfiguration, ITransactionMessageConfiguration
     {
         public string BillingAmmoutPlaceholder { init; get; } = "{ammount}";
         public string TaskDescriptionPlaceholder { init; get; } = "{taskDesription}";

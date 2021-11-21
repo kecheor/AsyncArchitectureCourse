@@ -3,9 +3,14 @@ using System.Text;
 
 namespace Popug.Billing.Pricing.Services
 {
-    public class BillingMessageGenerator : IBillingMessageGenerator
+    public class TransactionMessageGenerator : ITransactionMessageGenerator
     {
-        private readonly BillingConfiguration _configuration;
+        private readonly ITransactionMessageConfiguration _configuration;
+
+        public TransactionMessageGenerator(ITransactionMessageConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public BillingTransaction CreateTaskAssignWithdrawalMessage(BillingTransaction transaction, string taskDescription)
         {

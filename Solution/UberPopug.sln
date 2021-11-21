@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.BillingRepository", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.Billing.Repository.Redis", "Popug.Billing.Repository.Redis\Popug.Billing.Repository.Redis.csproj", "{706E6BAB-F6E0-4720-970B-23A47BA67EC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popug.Billing.Pricing.Tests", "Popug.Billing.Pricing.Tests\Popug.Billing.Pricing.Tests.csproj", "{1E88AC56-87E7-46DB-B0D3-2B56FAA96B65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +110,10 @@ Global
 		{706E6BAB-F6E0-4720-970B-23A47BA67EC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{706E6BAB-F6E0-4720-970B-23A47BA67EC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{706E6BAB-F6E0-4720-970B-23A47BA67EC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E88AC56-87E7-46DB-B0D3-2B56FAA96B65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E88AC56-87E7-46DB-B0D3-2B56FAA96B65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E88AC56-87E7-46DB-B0D3-2B56FAA96B65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E88AC56-87E7-46DB-B0D3-2B56FAA96B65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +132,7 @@ Global
 		{76B0C568-AB31-42CF-9CA1-C7D0E2D6857F} = {2B5048BC-D50F-4FD5-AA71-5E874C61DDFB}
 		{C1DCCCBB-788B-4EA8-8378-1625DDC92891} = {2B5048BC-D50F-4FD5-AA71-5E874C61DDFB}
 		{706E6BAB-F6E0-4720-970B-23A47BA67EC7} = {2B5048BC-D50F-4FD5-AA71-5E874C61DDFB}
+		{1E88AC56-87E7-46DB-B0D3-2B56FAA96B65} = {2B5048BC-D50F-4FD5-AA71-5E874C61DDFB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {547477A0-3920-4655-BF7C-610C9E182570}
