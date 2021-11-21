@@ -1,4 +1,4 @@
-﻿namespace Popug.Common
+﻿namespace Popug.Common.Enums
 {
     public enum TaskState
     {

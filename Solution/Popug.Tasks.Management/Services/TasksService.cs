@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Popug.Common;
+using Popug.Common.Enums;
 using Popug.Common.Monads;
 using Popug.Common.Monads.Errors;
 using Popug.Tasks.Management.Models;
-using Popug.Tasks.Repository;
 using Popug.Tasks.Repository.Models;
 using Popug.Tasks.Repository.Repositories;
 
@@ -13,16 +12,18 @@ namespace Popug.Tasks.Management.Services
     {
         private readonly IPerformerRepository _performerRepository;
         private readonly ITasksRepository _tasksRepository;
-        public TasksService(ITasksRepository tasksRepository,IPerformerRepository performerRepository)
+        private readonly ILogger<ITasksService> _logger;
+        public TasksService(ITasksRepository tasksRepository, IPerformerRepository performerRepository, ILogger<ITasksService> logger)
         {
             _tasksRepository = tasksRepository;
             _performerRepository = performerRepository;
+            _logger = logger;
         }
 
         public async Task<Either<IReadOnlyList<TaskDto>, Error>> Mine(string performer, CancellationToken cancellationToken)
         {
             var data = await _tasksRepository.FindByPerformer(performer, TaskState.Active, cancellationToken);
-
+            _logger.LogTrace($"Found {data.Count} tasks for {performer}");
             return data
                 .Select(t => new TaskDto(t.TaskPublicId, t.Text, t.Performer.Name, TaskState.Active, t.Created))
                 .ToArray();
@@ -33,21 +34,28 @@ namespace Popug.Tasks.Management.Services
             var task = await _tasksRepository.FindByPublicId(taskId, cancellationToken);
             if (task == null)
             {
-                return new Error("Task not found");
+                var message = $"Can't close task {taskId}. Task not found.";
+                _logger.LogWarning(message);
+                return new Error(message);
             }
             if (task.Performer.ChipId != currentPopug)
             {
-                return new Error("Only performer can close the task");
+                var message = $"Can't close task {taskId}. Only performer can close the task.";
+                _logger.LogWarning(message);
+                return new Error(message);
             }
             if (task.Status != TaskState.Active)
             {
-                return new Error("Only active tasks can be closed");
+                var message = $"Can't close task {taskId}. Only active tasks can be closed.";
+                _logger.LogWarning(message);
+                return new Error(message);
             }
 
             task.Status = TaskState.Closed;
             task.Updated = DateTime.UtcNow;
             //TODO: change to state change method
             await _tasksRepository.Save(task, cancellationToken);
+            _logger.LogInformation($"Closed task {taskId}");
             return Of.None();
         }
 
@@ -56,7 +64,9 @@ namespace Popug.Tasks.Management.Services
             var performers = await _performerRepository.FindInRole(Roles.User, cancellationToken);
             if (performers == null || !performers.Any())
             {
-                return new Error("Could not find sutable performer for the task");
+                var message = $"Can't create new task. Could not find sutable performer for the task.";
+                _logger.LogWarning(message);
+                return new Error(message);
             }
             var lucky = new Random().Next(performers.Count);
             var performer = performers[lucky];
@@ -74,6 +84,7 @@ namespace Popug.Tasks.Management.Services
             await Task.WhenAll(
                 _tasksRepository.Add(task, cancellationToken),
                 _performerRepository.LogAssign(log, cancellationToken));
+            _logger.LogInformation($"Created new task {task.Id} and assigned to {performer.Id}");
             return new TaskDto(task.TaskPublicId, task.Text, task.Performer.Name, task.Status, task.Created);
         }
 
@@ -82,7 +93,9 @@ namespace Popug.Tasks.Management.Services
             var performers = await _performerRepository.FindInRole(Roles.User, cancellationToken);
             if (performers == null || !performers.Any())
             {
-                return new Error("Could not find sutable performers for the tasks");
+                var message = $"Can't reassign task. Could not find sutable performers for the tasks.";
+                _logger.LogWarning(message);
+                return new Error(message);
             }
 
             var tasks = await _tasksRepository.FindByState(TaskState.Active, cancellationToken);
@@ -97,8 +110,10 @@ namespace Popug.Tasks.Management.Services
                 //WARNING This also commits task change
                 //TODO: remove awaits from the loop
                 await _performerRepository.LogAssign(log, cancellationToken);
+                _logger.LogInformation($"Assigned task {task.Id} and assigned to {performer.Id}");
                 changeLog.Add(new StateChangeLog(task.TaskPublicId, performer.ChipId, DateTime.UtcNow));
             }
+            _logger.LogInformation($"Reassigned {changeLog.Count} tasks");
             return changeLog;
         }
     }

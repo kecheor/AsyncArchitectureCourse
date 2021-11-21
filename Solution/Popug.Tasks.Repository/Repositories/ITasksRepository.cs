@@ -1,4 +1,4 @@
-﻿using Popug.Common;
+﻿using Popug.Common.Enums;
 using Popug.Tasks.Repository.Models;
 
 namespace Popug.Tasks.Repository.Repositories

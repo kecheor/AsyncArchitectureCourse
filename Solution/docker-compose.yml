@@ -1,31 +1,5 @@
 version: "3.9"
 services:
-  accountsdb:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: popug_admin
-      POSTGRES_PASSWORD: popug123
-    command: -p 5442
-    ports:
-      - 5442:5442
-
-  tasksdb:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: popug_admin
-      POSTGRES_PASSWORD: popug123
-    command: -p 5452
-    ports:
-      - 5452:5452
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8084:8080
-
   zookeeper:
     image: confluentinc/cp-zookeeper:5.4.1
     hostname: zookeeper
@@ -58,11 +32,47 @@ services:
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+  accountsdb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: popug_admin
+      POSTGRES_PASSWORD: popug123
+    command: -p 5442
+    ports:
+      - 5442:5442
+
+  tasksdb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: popug_admin
+      POSTGRES_PASSWORD: popug123
+    command: -p 5452
+    ports:
+      - 5452:5452
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8084:8080
 
   magic:
     image: digitsy/kafka-magic
     ports:
-      - "8080:80"
+      - "8085:80"
     environment:
       KMAGIC_ALLOW_TOPIC_DELETE: "false"
       KMAGIC_ALLOW_SCHEMA_DELETE: "false"
+  
+  identity-server:
+    image: identity-server
+    ports:
+      - 32775:80
+      - 32776:443
+    environment: 
+      ConnectionStrings.Accounts: "Host=accountsdb;Port=5442;Database=popugs;Username=popug_admin;Password=popug123"
+      Clients.0.BaseUrl: "https://localhost:7144"
+      Clients.1.BaseUrl: "https://localhost:7204"
+      ASPNETCORE_HTTPS_PORT: 443

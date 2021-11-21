@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Popug.Messages.Kafka;
+using Popug.Tasks.Consumer;
 using Popug.Tasks.Repository;
+using Popug.Tasks.Repository.Repositories;
 
 var services = new ServiceCollection();
 var configuration = new ConfigurationBuilder()

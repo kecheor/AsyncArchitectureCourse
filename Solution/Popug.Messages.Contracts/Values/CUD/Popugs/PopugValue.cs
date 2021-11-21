@@ -1,4 +1,4 @@
-﻿using Popug.Common;
+﻿using Popug.Common.Enums;
 
 namespace Popug.Messages.Contracts.Values.CUD.Popugs;
 /// <summary>
